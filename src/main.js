@@ -5,7 +5,9 @@ import App from './App'
 import router from './router'
 // 加载UI组件
 import ElementUI from 'element-ui'
-// 加载主题
+// 加载样式
+import 'element-ui/lib/theme-chalk/index.css'
+
 Vue.use(ElementUI)
 
 Vue.config.productionTip = false
