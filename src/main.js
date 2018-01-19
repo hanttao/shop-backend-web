@@ -34,6 +34,5 @@ router.beforeEach((to, from, next) => {
 new Vue({
   el: '#app',
   router,
-  components: { App },
-  template: '<App/>'
+  render: create => create(App)
 })
