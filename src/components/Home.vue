@@ -3,6 +3,7 @@
     <el-aside :style='{width:"auto",overflow:"visible"}'>
        <div class="logo"></div>
       <el-menu
+        router
         :collapse="isCollapse"
         :unique-opened="true"
         default-active="2"
@@ -92,7 +93,6 @@
 </template>
 
 <script>
-import {testData} from '../api/api.js'
 export default {
   data () {
     return {
@@ -116,15 +116,6 @@ export default {
     handleClose (key, keyPath) {
       console.log(key, keyPath)
     }
-  },
-  mounted () {
-    testData({
-      query: '',
-      pagenum: 1,
-      pagesize: 10
-    }).then(res => {
-      console.log(res)
-    })
   }
 }
 </script>

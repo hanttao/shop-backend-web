@@ -21,8 +21,8 @@ export const login = (params) => {
     return res.data
   })
 }
-// 测试请求头
-export const testData = (params) => {
+// 请求数据
+export const getUsersData = (params) => {
   return axios.get('users', {params: params}).then(res => {
     return res.data
   })
