@@ -7,7 +7,7 @@ import router from './router'
 import ElementUI from 'element-ui'
 // 加载样式
 import 'element-ui/lib/theme-chalk/index.css'
-
+// 启用ElementUI
 Vue.use(ElementUI)
 
 Vue.config.productionTip = false
@@ -31,6 +31,7 @@ router.beforeEach((to, from, next) => {
 })
 
 /* eslint-disable no-new */
+// 33行不能删除 会报错
 new Vue({
   el: '#app',
   router,

@@ -3,7 +3,7 @@
     <div class="avatar">
       <img src="../assets/luo.jpg" alt="" width="140">
     </div>
-    <!-- 表单 -->
+    <!-- ref表示组件名称，用于直接操作DOM -->
     <el-form ref="loginForm" :rules='rules' :model='form' class="container">
       <div class="userInfo">
         <el-form-item prop='username'>
@@ -31,6 +31,7 @@ export default {
         password: ''
       },
       rules: {
+        // 用户输入规则 element-ui 提供
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' }
         ],
@@ -51,6 +52,7 @@ export default {
             username: this.form.username,
             password: this.form.password
           }
+          // 调用接口，提交用户登录信息
           login(params).then(res => {
             console.log(res)
             if (res.meta.status === 200) {

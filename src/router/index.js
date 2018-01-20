@@ -18,7 +18,7 @@ export default new Router({
       path: '/home',
       name: 'home',
       component: Home,
-      redirect: '/welcome',
+      redirect: '/welcome', // 重定向到子路由
       children: [
         {
           path: '/welcome',

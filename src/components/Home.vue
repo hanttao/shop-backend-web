@@ -96,6 +96,7 @@
 export default {
   data () {
     return {
+      // 绑定切换侧边栏展开收缩
       isCollapse: false
     }
   },

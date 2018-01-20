@@ -16,6 +16,7 @@
         :data="tableData"
         border
         style="width: 100%">
+        <!-- type='index 设置每列显示索引' -->
         <el-table-column
           type="index"
           label="#"
@@ -42,15 +43,17 @@
           width="180">
           <template slot-scope="scope">
             <!-- 作用域插槽，可以定制数据显示 -->
+            <!-- toggleUser 不传参打印的是false true 拿不到数据 所以要带参数 第二个参数是undefind -->
             <el-switch @change='toggleUser(scope.row)' v-model="scope.row.mg_state"></el-switch>
           </template>
         </el-table-column>
         <el-table-column
-          label="操作">
+          label="操作"
+          width="300">
           <template slot-scope="scope">
-            <el-button type="primary" icon="el-icon-edit"></el-button>
-            <el-button type="primary" icon="el-icon-edit"></el-button>
-            <el-button type="primary" icon="el-icon-delete"></el-button>
+            <el-button type="primary" size='small' icon="el-icon-edit"></el-button>
+            <el-button type="primary" size='small' icon="el-icon-check"></el-button>
+            <el-button type="primary" size='small' icon="el-icon-delete"></el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -70,18 +73,19 @@
 </template>
 
 <script>
-import {getUsersData} from '../../api/api.js'
+import {getUsersData, toggleUserState} from '../../api/api.js'
 export default {
   data () {
     return {
-      tableData: [],
-      currentPage: 1,
-      pagesize: 5,
-      total: 100
+      tableData: [], // 实际的表格列表数据
+      currentPage: 1, // 当前页码
+      pagesize: 5, // 每页显示条数
+      total: 0 // 数据总条数
     }
   },
   methods: {
     initList () {
+      // 初始化数据列表
       getUsersData({
         query: '',
         pagenum: this.currentPage,
@@ -95,17 +99,37 @@ export default {
       })
     },
     handleSizeChange (val) {
-      console.log(`每页 ${val} 条`)
+      // 改变每页显示条数
+      // console.log(`每页 ${val} 条`)
       this.pagesize = val
       this.initList()
     },
     handleCurrentChange (val) {
-      console.log(`当前页: ${val}`)
+      // 改变当前页码
+      // console.log(`当前页: ${val}`)
       this.currentPage = val
       this.initList()
+    },
+    toggleUser (data) {
+      // 改变用户状态
+      toggleUserState({
+        uId: data.id, // 用户id
+        state: data.mg_state // 用户当前状态
+      }).then(res => {
+        // console.log(res)
+        // 状态 res.data.mg_state 0和1 之间切换,只要判断 res.meta.status是 200 就是设置成功了
+        if (res.meta.status === 200) {
+          // 弹窗提示成功信息
+          this.$message({
+            message: res.meta.msg,
+            type: 'success'
+          })
+        }
+      })
     }
   },
   mounted () {
+    // 首次加载页面，初始化表格数据
     this.initList()
   }
 }
