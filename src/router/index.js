@@ -15,7 +15,7 @@ export default new Router({
       component: Login
     },
     {
-      path: '/home',
+      path: '/',
       name: 'home',
       component: Home,
       redirect: '/welcome', // 重定向到子路由

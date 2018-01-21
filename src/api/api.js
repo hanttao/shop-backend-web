@@ -35,3 +35,17 @@ export const toggleUserState = (params) => {
     return res.data
   })
 }
+// 用户管理-删除用户
+export const deleteUserData = (params) => {
+  // restful形式的url   /users/512/state/true
+  return axios.delete('users/' + params.uId).then(res => {
+    return res.data
+  })
+}
+// 用户管理-添加用户
+export const addUserData = (params) => {
+  // restful形式的url   /users/512/state/true
+  return axios.post('users', params).then(res => {
+    return res.data
+  })
+}
