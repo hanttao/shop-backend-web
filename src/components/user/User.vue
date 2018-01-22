@@ -10,20 +10,20 @@
         <el-button slot="append" icon="el-icon-search"></el-button>
       </el-input>
       <el-button type="success" plain @click="dialogFormVisible = true">添加用户</el-button>
-      <!-- 打开嵌套表单的 Dialog -->
+      <!-- 添加用户弹窗 Dialog -->
       <el-dialog title="添加用户" :visible.sync="dialogFormVisible">
-        <el-form :model="form" ref="addForm" :rules='rules'>
-          <el-form-item label="用户名" :label-width="formLabelWidth" required>
-            <el-input v-model="form.username" auto-complete="off"></el-input>
+        <el-form :model="user" ref="addUser" :rules='rules'>
+          <el-form-item label="用户名" :label-width="formLabelWidth" prop='username'>
+            <el-input v-model="user.username"></el-input>
           </el-form-item>
-          <el-form-item label="密码" :label-width="formLabelWidth" required>
-            <el-input v-model="form.password" auto-complete="off"></el-input>
+          <el-form-item label="密码" :label-width="formLabelWidth" prop='password'>
+            <el-input v-model="user.password"></el-input>
           </el-form-item>
-          <el-form-item label="邮箱" :label-width="formLabelWidth" required>
-            <el-input v-model="form.email" auto-complete="off"></el-input>
+          <el-form-item label="邮箱" :label-width="formLabelWidth" prop='email'>
+            <el-input v-model="user.email"></el-input>
           </el-form-item>
-          <el-form-item label="电话" :label-width="formLabelWidth" required>
-            <el-input v-model="form.mobile" auto-complete="off"></el-input>
+          <el-form-item label="电话" :label-width="formLabelWidth" prop='mobile'>
+            <el-input v-model="user.mobile"></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -72,32 +72,31 @@
           label="操作"
           width="300">
           <template slot-scope="scope">
-            <el-button type="primary" size='small' icon="el-icon-edit" @click="dialogEditVisible = true"></el-button>
+            <el-button type="primary" size='small' icon="el-icon-edit" @click="dialogEditVisible = true">
+              <!-- 打开嵌套表单的 Dialog -->
+              <el-dialog title="编辑用户" :visible.sync="dialogEditVisible">
+                <el-form :model="formEdit">
+                  <el-form-item label="用户名" :label-width="formLabelWidth" required>
+                    <el-input v-model="formEdit.username" auto-complete="off"></el-input>
+                  </el-form-item>
+                  <el-form-item label="邮箱" :label-width="formLabelWidth" required>
+                    <el-input v-model="formEdit.email" auto-complete="off"></el-input>
+                  </el-form-item>
+                  <el-form-item label="电话" :label-width="formLabelWidth" required>
+                    <el-input v-model="formEdit.mobile" auto-complete="off"></el-input>
+                  </el-form-item>
+                </el-form>
+                <div slot="footer" class="dialog-footer">
+                  <el-button @click="dialogEditVisible = false">取 消</el-button>
+                  <el-button type="primary" @click='editUserList(scope.row)'>确 定</el-button>
+                </div>
+              </el-dialog>
+            </el-button>
             <el-button type="primary" size='small' icon="el-icon-check"></el-button>
             <el-button type="primary" size='small' icon="el-icon-delete" @click='deleteUser(scope.row)'></el-button>
           </template>
         </el-table-column>
       </el-table>
-      <div>
-        <!-- 打开嵌套表单的 Dialog -->
-        <el-dialog title="编辑用户" :visible.sync="dialogEditVisible">
-          <el-form :model="formEdit">
-            <el-form-item label="用户名" :label-width="formLabelWidth" required>
-              <el-input v-model="formEdit.username" auto-complete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="邮箱" :label-width="formLabelWidth" required>
-              <el-input v-model="formEdit.email" auto-complete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="电话" :label-width="formLabelWidth" required>
-              <el-input v-model="formEdit.mobile" auto-complete="off"></el-input>
-            </el-form-item>
-          </el-form>
-          <div slot="footer" class="dialog-footer">
-            <el-button @click="dialogEditVisible = false">取 消</el-button>
-            <el-button type="primary" @click="dialogEditVisible = false">确 定</el-button>
-          </div>
-        </el-dialog>
-      </div>
     </div>
     <div>
       <el-pagination
@@ -114,7 +113,7 @@
 </template>
 
 <script>
-import {getUsersData, toggleUserState, deleteUserData, addUserData} from '../../api/api.js'
+import {getUsersData, toggleUserState, addUserData, deleteUserData, editUserData} from '../../api/api.js'
 export default {
   data () {
     return {
@@ -123,11 +122,26 @@ export default {
       pagesize: 5, // 每页显示条数
       total: 0, // 数据总条数
       dialogFormVisible: false,
-      form: {
+      user: {
         username: '',
         password: '',
         mobile: '',
         email: ''
+      },
+      rules: {
+        // 用户输入规则 element-ui 提供
+        username: [
+          { required: true, message: '请输入用户名', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' }
+        ],
+        email: [
+          { required: true, message: '请输入邮箱', trigger: 'blur' }
+        ],
+        mobile: [
+          { required: true, message: '请输入电话', trigger: 'blur' }
+        ]
       },
       dialogEditVisible: false,
       formEdit: {
@@ -140,16 +154,7 @@ export default {
         resource: '',
         desc: ''
       },
-      formLabelWidth: '120px',
-      rules: {
-        // 用户输入规则 element-ui 提供
-        username: [
-          { required: true, message: '请输入用户名', trigger: 'blur' }
-        ],
-        password: [
-          { required: true, message: '请输入密码', trigger: 'blur' }
-        ]
-      }
+      formLabelWidth: '120px'
     }
   },
   methods: {
@@ -212,19 +217,38 @@ export default {
       })
     },
     addUserList () {
-      // console.log(data)
-      // 添加用户
-      addUserData({
-        username: this.form.username,
-        password: this.form.password,
-        moblie: this.form.mobile,
-        email: this.form.email
+      this.$refs['addUser'].validate(valid => {
+        if (valid) {
+          // 添加用户
+          addUserData(this.user).then(res => {
+            if (res.meta.status === 201) {
+              // 清空内容
+              this.user = {}
+              // 关闭弹窗
+              this.dialogFormVisible = false
+              // 重绘页面
+              this.initList()
+              // 提示信息
+              this.$message({
+                message: res.meta.msg,
+                type: 'success'
+              })
+            }
+          })
+        }
+      })
+    },
+    editUserList (data) {
+      editUserData({
+        uId: data.id // 用户id
       }).then(res => {
         console.log(res)
-        if (res.meta.status === 201) {
-          res.data.mobile = this.form.mobile
+        if (res.meta.status === 200) {
+          res.data.username = this.formEdit.username
+          res.data.mobile = this.formEdit.mobile
+          res.data.email = this.formEdit.email
+          this.dialogEditVisible = false
           this.initList()
-          this.dialogFormVisible = false
           this.$message({
             message: res.meta.msg,
             type: 'success'

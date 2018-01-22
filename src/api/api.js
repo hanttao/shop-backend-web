@@ -44,8 +44,14 @@ export const deleteUserData = (params) => {
 }
 // 用户管理-添加用户
 export const addUserData = (params) => {
-  // restful形式的url   /users/512/state/true
   return axios.post('users', params).then(res => {
+    return res.data
+  })
+}
+// 用户管理-用户状态
+export const editUserData = (params) => {
+  // restful形式的url   /users/512/state/true
+  return axios.put('users/' + params.uId).then(res => {
     return res.data
   })
 }
