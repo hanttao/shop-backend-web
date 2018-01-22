@@ -62,3 +62,10 @@ export const deleteUserData = (params) => {
     return res.data
   })
 }
+// 权限管理-权限列表数据获取
+export const rightList = (params) => {
+  // restful形式的url   /users/512/state/true
+  return axios.get('rights/' + params.type).then(res => {
+    return res.data
+  })
+}
