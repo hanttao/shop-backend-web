@@ -69,3 +69,37 @@ export const rightList = (params) => {
     return res.data
   })
 }
+// 权限管理-获取第一层角色信息
+export const getRoles = () => {
+  // restful形式的url   /users/512/state/true
+  return axios.get('roles').then(res => {
+    return res.data
+  })
+}
+// 权限管理-添加角色
+export const addRoleData = (params) => {
+  return axios.post('roles', params).then(res => {
+    return res.data
+  })
+}
+// 权限管理-查询角色
+export const getRoleById = (params) => {
+  // restful形式的url   /users/512/state/true
+  return axios.get('roles/' + params.id).then(res => {
+    return res.data
+  })
+}
+// 权限管理-编辑角色
+export const editRoleData = (params) => {
+  // restful形式的url   /users/512/state/true
+  return axios.put('roles/' + params.id, params).then(res => {
+    return res.data
+  })
+}
+// 权限管理-删除角色
+export const deleteRoleData = (params) => {
+  // restful形式的url   /users/512/state/true
+  return axios.delete('roles/' + params.id).then(res => {
+    return res.data
+  })
+}
