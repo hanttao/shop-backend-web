@@ -31,14 +31,7 @@ export const getUsersData = (params) => {
 // 用户管理-用户状态
 export const toggleUserState = (params) => {
   // restful形式的url   /users/512/state/true
-  return axios.put('users/' + params.uId + '/state/' + params.state).then(res => {
-    return res.data
-  })
-}
-// 用户管理-删除用户
-export const deleteUserData = (params) => {
-  // restful形式的url   /users/512/state/true
-  return axios.delete('users/' + params.uId).then(res => {
+  return axios.put('users/' + params.id + '/state/' + params.state).then(res => {
     return res.data
   })
 }
@@ -48,10 +41,24 @@ export const addUserData = (params) => {
     return res.data
   })
 }
-// 用户管理-用户状态
+// 用户管理-查询用户
+export const getUserById = (params) => {
+  // restful形式的url   /users/512/state/true
+  return axios.get('users/' + params.id).then(res => {
+    return res.data
+  })
+}
+// 用户管理-编辑用户
 export const editUserData = (params) => {
   // restful形式的url   /users/512/state/true
-  return axios.put('users/' + params.uId).then(res => {
+  return axios.put('users/' + params.id, params).then(res => {
+    return res.data
+  })
+}
+// 用户管理-删除用户
+export const deleteUserData = (params) => {
+  // restful形式的url   /users/512/state/true
+  return axios.delete('users/' + params.id).then(res => {
     return res.data
   })
 }
