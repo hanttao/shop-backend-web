@@ -103,3 +103,10 @@ export const deleteRoleData = (params) => {
     return res.data
   })
 }
+// 权限管理-删除角色权限
+export const deleteRoleRight = (params) => {
+  // restful形式的url   /users/512/state/true
+  return axios.delete('roles/' + params.roleId + '/rights/' + params.rightId).then(res => {
+    return res.data
+  })
+}

@@ -16,17 +16,17 @@
         <template slot-scope='scope'>
           <el-row :key="item.id" v-for="item in scope.row.children">
             <el-col :span="3">
-              <el-tag @close="deleteRight(item.id)" closable>{{item.authName}}</el-tag>
+              <el-tag @close="deleteRight(scope.row, item.id)" closable>{{item.authName}}</el-tag>
               <i v-if="item.children.length>0" class="el-icon-arrow-right arrow"></i>
             </el-col>
             <el-col :span="21">
               <el-row class="authlist" :key="tag.id" v-for="tag in item.children">
                 <el-col :span="4">
-                  <el-tag @close="deleteRight(tag.id)" type="success" closable>{{tag.authName}}</el-tag>
+                  <el-tag @close="deleteRight(scope.row, tag.id)" type="success" closable>{{tag.authName}}</el-tag>
                   <i v-if="tag.children.length>0" class="el-icon-arrow-right arrow"></i>
                 </el-col>
                 <el-col :span="20">
-                  <el-tag @close="deleteRight(btn.id)" :key="btn.id" type="warning" closable v-for="btn in tag.children">{{btn.authName}}</el-tag>
+                  <el-tag @close="deleteRight(scope.row, btn.id)" :key="btn.id" type="warning" closable v-for="btn in tag.children">{{btn.authName}}</el-tag>
                 </el-col>
               </el-row>
             </el-col>
@@ -98,7 +98,7 @@
 </template>
 
 <script>
-import {getRoles, addRoleData, getRoleById, editRoleData, deleteRoleData} from '../../api/api.js'
+import {getRoles, addRoleData, getRoleById, editRoleData, deleteRoleData, deleteRoleRight} from '../../api/api.js'
 export default {
   data () {
     return {
@@ -126,6 +126,20 @@ export default {
     }
   },
   methods: {
+    deleteRight (row, rightId) {
+      deleteRoleRight({
+        roleId: row.id,
+        rightId: rightId
+      }).then(res => {
+        if (res.meta.status === 200) {
+          row.children = res.data
+          this.$message({
+            type: 'success',
+            message: res.meta.msg
+          })
+        }
+      })
+    },
     deleteRole (row) {
       // 点击删除弹窗
       this.$confirm('此操作将永久删除该角色, 是否继续?', '提示', {
