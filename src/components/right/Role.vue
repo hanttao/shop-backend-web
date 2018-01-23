@@ -107,6 +107,7 @@
         :props="treeProps"
         node-key="id"
         default-expand-all
+        :default-checked-keys="selectId"
         :expand-on-click-node="false">
       </el-tree>
       <span slot="footer" class="dialog-footer">
@@ -127,6 +128,7 @@ export default {
         children: 'children'
       },
       treeData: [],
+      selectId: [],
       role: {
         roleName: '',
         roleDesc: ''
@@ -152,14 +154,24 @@ export default {
     }
   },
   methods: {
+    getTree4ThirdLevel (data, arr) {
+      data.forEach(item => {
+        if (!item.children) {
+          arr.push(item.id)
+        } else {
+          this.getTree4ThirdLevel(item.children, arr)
+        }
+      })
+    },
     submitRole4Grant () {
       console.log('grant')
     },
-    grantRole () {
+    grantRole (row) {
       // 调接口填充数据弹窗
       rightList({type: 'tree'}).then(res => {
         if (res.meta.status === 200) {
           this.treeData = res.data
+          this.getTree4ThirdLevel(row.children, this.selectId)
           this.dialogVisible4Grant = true
         }
       })
