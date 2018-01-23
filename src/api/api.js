@@ -62,6 +62,13 @@ export const deleteUserData = (params) => {
     return res.data
   })
 }
+// 用户管理-分配用户角色
+export const grantUserRole = (params) => {
+  // restful形式的url   /users/512/state/true
+  return axios.put('users/' + params.id + '/role', params).then(res => {
+    return res.data
+  })
+}
 // 权限管理-权限列表数据获取
 export const rightList = (params) => {
   // restful形式的url   /users/512/state/true

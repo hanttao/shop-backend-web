@@ -19,7 +19,7 @@
       <el-table-column
         type="index"
         label="#"
-        width="180">
+        width="50">
       </el-table-column>
       <el-table-column
         prop="username"
@@ -37,9 +37,14 @@
         width="180">
       </el-table-column>
       <el-table-column
+        prop="role_name"
+        label="角色"
+        width="180">
+      </el-table-column>
+      <el-table-column
         prop="mg_state"
         label="用户状态"
-        width="180">
+        width="100">
         <template slot-scope="scope">
           <!-- 作用域插槽，可以定制数据显示 -->
           <!-- toggleUser 不传参打印的是false true 拿不到数据 所以要带参数 第二个参数是undefind -->
@@ -52,7 +57,7 @@
         <template slot-scope="scope">
           <el-button type="success" size='small' icon="el-icon-edit" @click="editHandle(scope.row)"></el-button>
           <el-button type="warning" size='small' icon="el-icon-delete" @click='deleteUser(scope.row)'></el-button>
-          <el-button type="primary" size='small' icon="el-icon-check"></el-button>
+          <el-button type="primary" size='small' icon="el-icon-check" @click='grantRole(scope.row)'></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -104,11 +109,33 @@
         <el-button type="primary" @click='editUserList'>确 定</el-button>
       </div>
     </el-dialog>
+    <!-- 角色分配弹窗 Dialog -->
+    <el-dialog title="角色分配" :visible.sync="dialogRoleVisible">
+      <div>
+        <span>当前用户名 :</span>
+        <span>{{currentUser.username}}</span>
+      </div>
+      <div>
+        <span>请选择角色 :</span>
+        <el-select v-model="currentRole" placeholder="请选择">
+          <el-option
+            v-for="item in roleList"
+            :key="item.id"
+            :label="item.roleName"
+            :value="item.id">
+          </el-option>
+        </el-select>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogRoleVisible = false">取 消</el-button>
+        <el-button type="primary" @click='submitGrant'>确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import {getUsersData, toggleUserState, addUserData, getUserById, editUserData, deleteUserData} from '../../api/api.js'
+import {getUsersData, toggleUserState, addUserData, getUserById, editUserData, deleteUserData, getRoles, grantUserRole} from '../../api/api.js'
 export default {
   data () {
     return {
@@ -142,15 +169,48 @@ export default {
       },
       dialogFormVisible: false,
       dialogEditVisible: false,
+      dialogRoleVisible: false,
       formLabelWidth: '120px',
       tableData: [], // 实际的表格列表数据
       currentPage: 1, // 当前页码
       pagesize: 5, // 每页显示条数
       total: 0, // 数据总条数
-      query: ''
+      query: '',
+      roleList: [],
+      currentUser: {},
+      currentRole: ''
     }
   },
   methods: {
+    submitGrant () {
+      grantUserRole({
+        id: this.currentUser.id,
+        rid: this.currentRole
+      }).then(res => {
+        if (res.meta.status === 200) {
+          // 关闭弹窗
+          this.dialogRoleVisible = false
+          // 刷新列表
+          this.initList()
+          // 提示信息
+          this.$message({
+            message: res.meta.msg,
+            type: 'success'
+          })
+        }
+      })
+      this.currentRole = ''
+    },
+    grantRole (row) {
+      // 调获取角色数据接口填充下拉框
+      this.currentUser = row
+      getRoles().then(res => {
+        if (res.meta.status === 200) {
+          this.roleList = res.data
+        }
+      })
+      this.dialogRoleVisible = true
+    },
     queryHandle () {
       // 关键字搜索 双向绑定的
       this.initList()
