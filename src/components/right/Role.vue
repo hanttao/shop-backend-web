@@ -53,7 +53,8 @@
         width="260">
         <template slot-scope='scope'>
           <el-button type="success" size='small' icon="el-icon-edit" @click="editHandle(scope.row)"></el-button>
-          <el-button type="warning" size='small' icon="el-icon-delete" @click='deleteRole(scope.row)'></el-button>
+          <el-button type="danger" size='small' icon="el-icon-delete" @click='deleteRole(scope.row)'></el-button>
+          <el-button type="warning" size='small' icon="el-icon-check" @click='grantRole(scope.row)'></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -94,14 +95,38 @@
         <el-button type="primary" @click="submitRole4Edit">确 定</el-button>
       </span>
     </el-dialog>
+    <!-- 授权角色树弹窗 -->
+    <el-dialog
+      title="授权角色"
+      @close='closeUserDialog("grant")'
+      :visible="dialogVisible4Grant"
+      width="50%">
+      <el-tree
+        show-checkbox
+        :data="treeData"
+        :props="treeProps"
+        node-key="id"
+        default-expand-all
+        :expand-on-click-node="false">
+      </el-tree>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible4Grant = false">取 消</el-button>
+        <el-button type="primary" @click="submitRole4Grant">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import {getRoles, addRoleData, getRoleById, editRoleData, deleteRoleData, deleteRoleRight} from '../../api/api.js'
+import {getRoles, addRoleData, getRoleById, editRoleData, deleteRoleData, deleteRoleRight, rightList} from '../../api/api.js'
 export default {
   data () {
     return {
+      treeProps: {
+        label: 'authName',
+        children: 'children'
+      },
+      treeData: [],
       role: {
         roleName: '',
         roleDesc: ''
@@ -120,12 +145,25 @@ export default {
           { required: true, message: '请输入角色描述', trigger: 'blur' }
         ]
       },
+      dialogVisible4Grant: false,
       dialogVisible4Add: false,
       dialogVisible4Edit: false,
       tableData: []
     }
   },
   methods: {
+    submitRole4Grant () {
+      console.log('grant')
+    },
+    grantRole () {
+      // 调接口填充数据弹窗
+      rightList({type: 'tree'}).then(res => {
+        if (res.meta.status === 200) {
+          this.treeData = res.data
+          this.dialogVisible4Grant = true
+        }
+      })
+    },
     deleteRight (row, rightId) {
       deleteRoleRight({
         roleId: row.id,
@@ -224,8 +262,10 @@ export default {
       // 关闭弹窗
       if (flag === 'add') {
         this.dialogVisible4Add = false
-      } else {
+      } else if (flag === 'edit') {
         this.dialogVisible4Edit = false
+      } else {
+        this.dialogVisible4Grant = false
       }
     },
     initList () {
