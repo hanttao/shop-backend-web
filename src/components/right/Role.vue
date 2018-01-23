@@ -102,6 +102,7 @@
       :visible="dialogVisible4Grant"
       width="50%">
       <el-tree
+        ref="tree"
         show-checkbox
         :data="treeData"
         :props="treeProps"
@@ -119,7 +120,7 @@
 </template>
 
 <script>
-import {getRoles, addRoleData, getRoleById, editRoleData, deleteRoleData, deleteRoleRight, rightList} from '../../api/api.js'
+import {getRoles, addRoleData, getRoleById, editRoleData, deleteRoleData, deleteRoleRight, rightList, submitGrant} from '../../api/api.js'
 export default {
   data () {
     return {
@@ -150,33 +151,67 @@ export default {
       dialogVisible4Grant: false,
       dialogVisible4Add: false,
       dialogVisible4Edit: false,
-      tableData: []
+      tableData: [],
+      currentRoleId: ''
     }
   },
   methods: {
+    submitRole4Grant () {
+      // 获取所有选中节点的数据对象列表
+      let list = this.$refs['tree'].getCheckedNodes()
+      // list是所在行对象集合的数组。通过map方法获取到后台需要的roleid,rids
+      let ids = list.map(item => {
+        return item.id + ',' + item.pid
+      })
+      // 数组去重使用es6的Set功能
+      let tmp = new Set(ids.join(',').split(','))
+      // ...es6扩展运算符 数据都是空格隔开
+      let result = [...tmp].join(',')
+      // 调用后台接口角色授权
+      submitGrant({
+        id: this.currentRoleId,
+        rids: result
+      }).then(res => {
+        // 关闭弹窗
+        this.dialogVisible4Grant = false
+        // 重新渲染页面
+        this.initList()
+        // 提示信息
+        this.$message({
+          message: res.meta.msg,
+          type: 'success'
+        })
+      })
+    },
     getTree4ThirdLevel (data, arr) {
+      // 定义一个获取三级节点的方法
       data.forEach(item => {
         if (!item.children) {
           arr.push(item.id)
         } else {
+          // 递归
           this.getTree4ThirdLevel(item.children, arr)
         }
       })
     },
-    submitRole4Grant () {
-      console.log('grant')
-    },
     grantRole (row) {
+      // 清空三级节点所有id
+      this.selectId = []
       // 调接口填充数据弹窗
       rightList({type: 'tree'}).then(res => {
         if (res.meta.status === 200) {
           this.treeData = res.data
+          // 调用获取三级节点id的方法
           this.getTree4ThirdLevel(row.children, this.selectId)
+          // 弹窗显示树形结构列表
           this.dialogVisible4Grant = true
+          // 存个当前role的id
+          this.currentRoleId = row.id
         }
       })
     },
     deleteRight (row, rightId) {
+      // 点击删除角色权限 第一个参数是每行角色的对象，第二个是权限的id
       deleteRoleRight({
         roleId: row.id,
         rightId: rightId
@@ -191,7 +226,7 @@ export default {
       })
     },
     deleteRole (row) {
-      // 点击删除弹窗
+      // 点击删除角色弹窗
       this.$confirm('此操作将永久删除该角色, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
