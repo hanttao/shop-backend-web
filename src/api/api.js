@@ -123,3 +123,16 @@ export const submitGrant = (params) => {
     return res.data
   })
 }
+// 商品管理-数据获取
+export const getCategorysData = (params) => {
+  // restful形式的url   /users/512/state/true
+  return axios.get('categories', {params: params}).then(res => {
+    return res.data
+  })
+}
+// 商品管理-添加分类
+export const addCategoryData = (params) => {
+  return axios.post('categories', params).then(res => {
+    return res.data
+  })
+}
