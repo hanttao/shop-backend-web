@@ -50,7 +50,7 @@
             <i class="el-icon-menu"></i>
             <span slot="title">商品分类</span>
           </el-menu-item>
-          <el-menu-item index="/param">
+          <el-menu-item index="/params">
             <i class="el-icon-menu"></i>
             <span slot="title">商品参数</span>
           </el-menu-item>

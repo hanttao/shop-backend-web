@@ -7,7 +7,7 @@ import User from '@/components/user/User'
 import Right from '@/components/right/Right'
 import Role from '@/components/right/Role'
 import Category from '@/components/product/Category'
-import TreeGrid from '@/components/product/TreeGrid'
+import Param from '@/components/product/param'
 
 Vue.use(Router)
 
@@ -50,9 +50,9 @@ export default new Router({
           component: Category
         },
         {
-          path: '/order',
-          name: 'order',
-          component: TreeGrid
+          path: '/params',
+          name: 'param',
+          component: Param
         }
       ]
     }

@@ -157,3 +157,10 @@ export const deleteCategoryData = (params) => {
     return res.data
   })
 }
+// 参数列表-分类参数或属性获取
+export const getGarams = (params) => {
+  // restful形式的url   /users/512/state/true
+  return axios.get('categories/' + params.id + '/attributes', {params: params}).then(res => {
+    return res.data
+  })
+}

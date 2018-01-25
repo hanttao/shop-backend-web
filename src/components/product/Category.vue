@@ -164,11 +164,12 @@ export default {
       // 添加分类无法确定添加的是顶级分类还是三级分类名称
       // 通过selectedOptions.length是0|1|2判断
       // 处理参数cate.pid cate.level
+      // level 是0 1 2 如果从1开始不能添加第三层分类
       if (this.selectedOptions.length === 0) {
         this.cate.cat_pid = 0
-        this.cate.cat_level = 1
+        this.cate.cat_level = 0
       } else {
-        this.cate.cat_level = this.selectedOptions.length === 1 ? 2 : 3
+        this.cate.cat_level = this.selectedOptions.length === 1 ? 1 : 2
         this.cate.cat_pid = this.selectedOptions[this.selectedOptions.length - 1]
       }
       addCategoryData(this.cate).then(res => {
