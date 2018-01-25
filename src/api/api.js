@@ -157,3 +157,9 @@ export const deleteCategoryData = (params) => {
     return res.data
   })
 }
+// 左侧菜单权限--获取菜单列表
+export const getMenu = (params) => {
+  return axios.get('menus').then(res => {
+    return res.data
+  })
+}

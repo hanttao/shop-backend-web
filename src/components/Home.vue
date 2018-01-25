@@ -13,66 +13,14 @@
         background-color="#545c64"
         text-color="#fff"
         active-text-color="#ffd04b">
-        <el-submenu index="1">
+        <el-submenu :index="item.path" :key='item.id' v-for='item in menuList'>
           <template slot="title">
             <i class="el-icon-location"></i>
-            <span slot="title">用户管理</span>
+            <span slot="title" v-text='item.authName'></span>
           </template>
-          <el-menu-item index="/user">
+          <el-menu-item :index="menu.path" :key='menu.id' v-for='menu in item.children'>
             <i class="el-icon-menu"></i>
-            <span>用户列表</span>
-          </el-menu-item>
-        </el-submenu>
-        <el-submenu index="2">
-          <template slot="title">
-            <i class="el-icon-location"></i>
-            <span slot="title">权限管理</span>
-          </template>
-          <el-menu-item index="/roles">
-            <i class="el-icon-menu"></i>
-            <span slot="title">角色列表</span>
-          </el-menu-item>
-          <el-menu-item index="/rights">
-            <i class="el-icon-menu"></i>
-            <span slot="title">权限列表</span>
-          </el-menu-item>
-        </el-submenu>
-        <el-submenu index="3">
-          <template slot="title">
-            <i class="el-icon-location"></i>
-            <span slot="title">商品管理</span>
-          </template>
-          <el-menu-item index="/product">
-            <i class="el-icon-menu"></i>
-            <span slot="title">商品列表</span>
-          </el-menu-item>
-          <el-menu-item index="/categorys">
-            <i class="el-icon-menu"></i>
-            <span slot="title">商品分类</span>
-          </el-menu-item>
-          <el-menu-item index="/param">
-            <i class="el-icon-menu"></i>
-            <span slot="title">商品参数</span>
-          </el-menu-item>
-        </el-submenu>
-        <el-submenu index="4">
-          <template slot="title">
-            <i class="el-icon-location"></i>
-            <span slot="title">订单管理</span>
-          </template>
-          <el-menu-item index="/order">
-            <i class="el-icon-menu"></i>
-            <span slot="title">订单列表</span>
-          </el-menu-item>
-        </el-submenu>
-        <el-submenu index="5">
-          <template slot="title">
-            <i class="el-icon-location"></i>
-            <span slot="title">数据统计</span>
-          </template>
-          <el-menu-item index="/report">
-            <i class="el-icon-menu"></i>
-            <span slot="title">数据报表</span>
+            <span v-text='menu.authName'></span>
           </el-menu-item>
         </el-submenu>
       </el-menu>
@@ -93,11 +41,13 @@
 </template>
 
 <script>
+import {getMenu} from '../api/api.js'
 export default {
   data () {
     return {
       // 绑定切换侧边栏展开收缩
-      isCollapse: false
+      isCollapse: false,
+      menuList: []
     }
   },
   methods: {
@@ -117,6 +67,14 @@ export default {
     handleClose (key, keyPath) {
       console.log(key, keyPath)
     }
+  },
+  mounted () {
+    getMenu().then(res => {
+      if (res.meta.status === 200) {
+        console.log(res)
+        this.menuList = res.data
+      }
+    })
   }
 }
 </script>

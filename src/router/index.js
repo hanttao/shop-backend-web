@@ -7,7 +7,6 @@ import User from '@/components/user/User'
 import Right from '@/components/right/Right'
 import Role from '@/components/right/Role'
 import Category from '@/components/product/Category'
-import TreeGrid from '@/components/product/TreeGrid'
 
 Vue.use(Router)
 
@@ -30,7 +29,7 @@ export default new Router({
           component: Welcome
         },
         {
-          path: '/user',
+          path: '/users',
           name: 'user',
           component: User
         },
@@ -48,11 +47,6 @@ export default new Router({
           path: '/categorys',
           name: 'category',
           component: Category
-        },
-        {
-          path: '/order',
-          name: 'order',
-          component: TreeGrid
         }
       ]
     }
