@@ -136,3 +136,24 @@ export const addCategoryData = (params) => {
     return res.data
   })
 }
+// 商品管理-查询分类
+export const getCategoryById = (params) => {
+  // restful形式的url   /users/512/state/true
+  return axios.get('categories/' + params.id).then(res => {
+    return res.data
+  })
+}
+// 商品管理-编辑分类提交
+export const editCategoryData = (params) => {
+  // restful形式的url   /users/512/state/true
+  return axios.put('categories/' + params.cat_pid, params).then(res => {
+    return res.data
+  })
+}
+// 商品管理-删除分类
+export const deleteCategoryData = (params) => {
+  // restful形式的url   /users/512/state/true
+  return axios.delete('categories/' + params.id).then(res => {
+    return res.data
+  })
+}

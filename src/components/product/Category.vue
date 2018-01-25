@@ -39,16 +39,42 @@
         <el-button type="primary" @click='submitCategory'>确 定</el-button>
       </div>
     </el-dialog>
+    <!-- 修改商品分类 Dialog -->
+    <el-dialog title="编辑分类" :visible.sync="dialogEditCategoryVisible">
+      <div>
+        <span>分类名称 :</span>
+        <el-input class='cname' v-model="ecate.cat_name" placeholder="请输入内容"></el-input>
+      </div>
+<!--       <div>
+        <span>父级分类 :</span>
+        <el-cascader
+          :options="categoryList"
+          :props='propsDefine'
+          :show-all-levels="false"
+          v-model="selectedOptions"
+        ></el-cascader>
+      </div> -->
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogEditCategoryVisible = false">取 消</el-button>
+        <el-button type="primary" @click='submitEditCategory'>确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 // 引入自定义组件
 import TreeGrid from './TreeGrid.vue'
-import {getCategorysData, addCategoryData} from '../../api/api.js'
+import {getCategorysData, addCategoryData, getCategoryById, editCategoryData, deleteCategoryData} from '../../api/api.js'
 export default {
   data () {
     return {
+      ecate: {
+        cat_pid: '',
+        cat_name: '',
+        cat_level: ''
+      },
+      dialogEditCategoryVisible: false,
       cate: {
         cat_pid: '',
         cat_name: '',
@@ -59,6 +85,7 @@ export default {
         label: 'cat_name'
       },
       categoryList: [],
+      ecategoryList: [],
       selectedOptions: [],
       dialogAddCategoryVisible: false,
       dataSource: [],
@@ -81,14 +108,57 @@ export default {
     }
   },
   methods: {
-    deleteCategory () {
-      console.log('delete')
-    },
-    showEditForm () {
-      console.log('show')
-    },
     refresh () {
       console.log('fresh')
+    },
+    deleteCategory (cid) {
+      deleteCategoryData({id: cid}).then(res => {
+        if (res.meta.status === 200) {
+          // 刷新列表
+          this.initList()
+          this.$message({
+            type: 'success',
+            message: res.meta.msg
+          })
+        }
+      })
+    },
+    submitEditCategory () {
+      // 编辑分类 第二步
+      // 提交数据和数据库同步
+      editCategoryData(this.ecate).then(res => {
+        if (res.meta.status === 200) {
+          // 刷新列表
+          this.initList()
+          // 关闭窗口
+          this.dialogEditCategoryVisible = false
+          // 提示
+          this.$message({
+            type: 'success',
+            message: res.meta.msg
+          })
+        }
+      })
+    },
+    showEditForm (cid) {
+      // 编辑分类 第一步
+      // 1 获取分类下拉列表数据
+      getCategorysData().then(res => {
+        if (res.meta.status === 200) {
+          this.ecatetoryList = res.data
+          // 获取数据后调用获取分类信息接口
+          return getCategoryById({id: cid})
+        }
+      }).then(res => {
+        if (res.meta.status === 200) {
+          // 2 数据填充表单
+          this.ecate.cat_pid = res.data.cat_id
+          this.ecate.cat_name = res.data.cat_name
+          this.ecate.cat_level = res.data.cat_level
+          // 3 弹窗
+          this.dialogEditCategoryVisible = true
+        }
+      })
     },
     submitCategory () {
       // 添加分类无法确定添加的是顶级分类还是三级分类名称
