@@ -29,7 +29,7 @@
       <el-header>
         <div>
           <i @click="toggleMenu" class="myicon myicon-menu btnsize"></i>
-          <div class="stitle">电商后台管理系统</div>
+          <div class="stitle"></div>
           <a href="javascript:;" @click="logout" class="logoutbtn">退出</a>
         </div>
       </el-header>
@@ -71,7 +71,6 @@ export default {
   mounted () {
     getMenu().then(res => {
       if (res.meta.status === 200) {
-        console.log(res)
         this.menuList = res.data
       }
     })

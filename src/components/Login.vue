@@ -27,8 +27,8 @@ export default {
   data () {
     return {
       form: {
-        username: '',
-        password: ''
+        username: 'admin',
+        password: '123456'
       },
       rules: {
         // 用户输入规则 element-ui 提供
@@ -54,10 +54,9 @@ export default {
           }
           // 调用接口，提交用户登录信息
           login(params).then(res => {
-            console.log(res)
             if (res.meta.status === 200) {
               // 跳转到主页
-              this.$router.push({name: 'home'})
+              this.$router.push({path: '/'})
               // 成功登陆后 存储token 值
               localStorage.setItem('mytoken', res.data.token)
             } else {
