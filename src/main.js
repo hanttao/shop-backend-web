@@ -7,6 +7,8 @@ import router from './router'
 import ElementUI from 'element-ui'
 // 加载样式
 import 'element-ui/lib/theme-chalk/index.css'
+
+import './icons'
 // 启用ElementUI
 Vue.use(ElementUI)
 
@@ -22,7 +24,7 @@ router.beforeEach((to, from, next) => {
     // 登陆的路由是不需要验证权限的
     if (to.path !== '/login') {
       // 如果没有权限，从新跳转到登录页面
-      next({path: '/login'})
+      next({ path: '/login' })
     } else {
       // 是登录页，直接跳转到登录页面
       next()
