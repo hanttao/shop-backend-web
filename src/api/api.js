@@ -24,7 +24,7 @@ export const login = (params) => {
 }
 // 请求数据
 export const getUsersData = (params) => {
-  return axios.get('users', {params: params}).then(res => {
+  return axios.get('users', { params: params }).then(res => {
     return res.data
   })
 }
@@ -123,10 +123,16 @@ export const submitGrant = (params) => {
     return res.data
   })
 }
-// 商品管理-数据获取
+// 左侧菜单权限--获取菜单列表
+export const getMenu = (params) => {
+  return axios.get('menus').then(res => {
+    return res.data
+  })
+}
+// 商品管理-分类数据获取
 export const getCategorysData = (params) => {
   // restful形式的url   /users/512/state/true
-  return axios.get('categories', {params: params}).then(res => {
+  return axios.get('categories', { params: params }).then(res => {
     return res.data
   })
 }
@@ -157,9 +163,41 @@ export const deleteCategoryData = (params) => {
     return res.data
   })
 }
-// 左侧菜单权限--获取菜单列表
-export const getMenu = (params) => {
-  return axios.get('menus').then(res => {
+
+// 商品管理-列表数据
+export const getGoodsData = (params) => {
+  return axios.get('goods', { params: params }).then(res => {
+    return res.data
+  })
+}
+// 商品管理-根据ID查询商品
+export const getGoodById = (params) => {
+  return axios.get('goods/' + params.id).then(res => {
+    return res.data
+  })
+}
+// 商品管理-删除商品
+export const deleteGoodData = (params) => {
+  return axios.delete('goods/' + params.id).then(res => {
+    return res.data
+  })
+}
+// 商品管理-编辑商品
+export const editGoodData = (params) => {
+  return axios.put('goods/' + params.id, params).then(res => {
+    return res.data
+  })
+}
+
+// 订单管理-列表数据
+export const getOrdersData = (params) => {
+  return axios.get('orders', { params: params }).then(res => {
+    return res.data
+  })
+}
+// 订单管理-修改支付状态
+export const updateOrderPayStatus = (params) => {
+  return axios.put('orders/' + params.id, params).then(res => {
     return res.data
   })
 }

@@ -27,7 +27,7 @@ const defaultRouters = [
         name: 'dashboard',
         component: () => import('@/components/dashboard'),
         meta: {
-          requireAuth: true,
+          requireAuth: true, title: '首页'
         }
       },
       {
@@ -35,7 +35,7 @@ const defaultRouters = [
         name: 'user',
         component: User,
         meta: {
-          requireAuth: true,
+          requireAuth: true, title: '用户列表'
         }
       },
       {
@@ -43,7 +43,7 @@ const defaultRouters = [
         name: 'right',
         component: Right,
         meta: {
-          requireAuth: true,
+          requireAuth: true, title: '权限列表'
         }
       },
       {
@@ -51,7 +51,15 @@ const defaultRouters = [
         name: 'role',
         component: Role,
         meta: {
-          requireAuth: true,
+          requireAuth: true, title: '角色列表'
+        }
+      },
+      {
+        path: '/goods',
+        name: 'good',
+        component: () => import('@/components/product/Good'),
+        meta: {
+          requireAuth: true, title: '商品列表'
         }
       },
       {
@@ -59,7 +67,15 @@ const defaultRouters = [
         name: 'category',
         component: Category,
         meta: {
-          requireAuth: true,
+          requireAuth: true, title: '商品分类'
+        }
+      },
+      {
+        path: '/orders',
+        name: 'order',
+        component: () => import('@/components/order'),
+        meta: {
+          requireAuth: true, title: '商品分类'
         }
       }
     ]
