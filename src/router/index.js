@@ -57,10 +57,37 @@ const defaultRouters = [
       {
         path: '/goods',
         name: 'good',
-        component: () => import('@/components/product/Good'),
+        component: () => import('@/components/product'),
         meta: {
-          requireAuth: true, title: '商品列表'
-        }
+          requireAuth: true, 
+        },
+        redirect: '/list', // 重定向到子路由
+        children: [
+          {
+            path: '/list',
+            name: 'list',
+            component: () => import('@/components/product/Good'),
+            meta: {
+              requireAuth: true, title: '商品列表'
+            }
+          },
+          {
+            path: '/addGood',
+            name: 'addGood',
+            component: () => import('@/components/product/addGood'),
+            meta: {
+              requireAuth: true, title: '添加商品'
+            }
+          },
+          {
+            path: '/editGood',
+            name: 'editGood',
+            component: () => import('@/components/product/editGood'),
+            meta: {
+              requireAuth: true, title: '编辑商品'
+            }
+          }
+        ]
       },
       {
         path: '/categorys',
