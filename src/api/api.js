@@ -188,7 +188,12 @@ export const editGoodData = (params) => {
     return res.data
   })
 }
-
+// 商品管理-分类参数-参数列表
+export const getParams = (params) => {
+  return axios.get('categories/' + params.id + '/attributes', { params: params }).then(res => {
+    return res.data
+  })
+}
 // 订单管理-列表数据
 export const getOrdersData = (params) => {
   return axios.get('orders', { params: params }).then(res => {
